@@ -1,11 +1,12 @@
 package com.sun_asterisk.moviedb_50.data.model
 
+import com.google.gson.annotations.SerializedName
 import org.json.JSONObject
 
 data class Cast(
-    val castId: Int,
-    val castName: String,
-    val castProfilePath: String
+    @SerializedName(CastEntry.ID) val castId: Int,
+    @SerializedName(CastEntry.NAME) val castName: String,
+    @SerializedName(CastEntry.PROFILE_PATH) val castProfilePath: String
 ) {
     constructor(castJson: JSONObject) : this(
         castId = castJson.optInt(CastEntry.ID),

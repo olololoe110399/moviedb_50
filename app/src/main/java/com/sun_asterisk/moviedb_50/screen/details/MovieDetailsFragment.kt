@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -155,9 +156,9 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         }
     }
 
-    override fun onError(exception: Exception?) {
-        exception?.let {
-            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+    override fun onError(str: String?) {
+        str?.let {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG)
                 .show()
         }
     }

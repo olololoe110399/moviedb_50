@@ -2,13 +2,16 @@ package com.sun_asterisk.moviedb_50.screen.listmovie
 
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
-import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
-import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class ListMoviePresenter(private val movieRepository: MovieRepository) :
     ListMovieContract.Presenter {
     private var view: ListMovieContract.View? = null
+    private val compositeDisposable = CompositeDisposable()
 
     override fun setView(view: ListMovieContract.View?) {
         this.view = view
@@ -18,23 +21,18 @@ class ListMoviePresenter(private val movieRepository: MovieRepository) :
         if (page == Constant.BASE_PAGE_DEFAULT) {
             view?.onLoading(false)
         }
-        movieRepository.getMovies(
-            type,
-            query,
-            page,
-            object : OnDataLoadedCallback<MoviesResponse> {
 
-                override fun onError(e: Exception) {
-                    view?.onError(e)
-                }
 
-                override fun onSuccess(data: MoviesResponse?) {
-                    data ?: return
-                    view?.onGetMovieResultPage(data.movieResultPage)
-                    view?.onGetMoviesSuccess(data.list as List<Movie>)
-                    view?.onLoading(true)
-                }
-            })
+        val disposable: Disposable = movieRepository.getMovies(type, query, page)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ data ->
+                view?.onGetMovieResultPage(data.movieTotalResult, data.movieTotalPage)
+                view?.onGetMoviesSuccess(data.list)
+                view?.onLoading(true)
+            },
+                { throwable -> view?.onError(throwable.message.toString()) })
+        compositeDisposable.add(disposable)
     }
 
     override fun onStart() {

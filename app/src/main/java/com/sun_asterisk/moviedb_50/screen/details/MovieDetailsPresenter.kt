@@ -3,13 +3,16 @@ package com.sun_asterisk.moviedb_50.screen.details
 import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
-import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
-import com.sun_asterisk.moviedb_50.utils.Constant
 import com.sun_asterisk.moviedb_50.utils.FavoriteEnum
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
     MovieDetailsContract.Presenter {
     private var view: MovieDetailsContract.View? = null
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onStart() {
     }
@@ -23,26 +26,23 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
 
     override fun getMovieDetails(movieID: Int) {
         view?.onLoading(false)
-        movieRepository.getMovieDetails(
-            movieID,
-            object : OnDataLoadedCallback<MovieDetailsResponse> {
-                override fun onError(e: Exception) {
-                    view?.onError(e)
-                }
+        val disposable: Disposable = movieRepository.getMovieDetails(movieID)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ data ->
+                view?.run {
+                    onGetCastsSuccess(data.casts.data)
+                    onGetMovieSuccess(data)
+                    onGetProducesSuccess(data.produce)
+                    onGetGenresSuccess(data.genres)
+                    onGetMovieTrailerSuccess(data.trailers.data)
 
-                override fun onSuccess(data: MovieDetailsResponse?) {
-                    data ?: return
-                    view?.run {
-                        onGetCastsSuccess(data.casts)
-                        onGetMovieSuccess(data.movies)
-                        onGetProducesSuccess(data.produce)
-                        onGetGenresSuccess(data.genres)
-                        onGetMovieTrailerSuccess(data.trailers)
-                    }
-                    view?.onLoading(true)
-                    isFavoriteMovie(movieID.toString())
                 }
-            })
+                view?.onLoading(true)
+                isFavoriteMovie(movieID.toString())
+            },
+                { throwable -> view?.onError(throwable.message.toString()) })
+        compositeDisposable.add(disposable)
     }
 
     private fun isFavoriteMovie(movieID: String) {
@@ -56,7 +56,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
             }
 
             override fun onError(e: Exception) {
-                view?.onError(e)
+                view?.onError(e.message.toString())
             }
 
         })
@@ -70,7 +70,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
             }
 
             override fun onError(e: Exception) {
-                view?.onError(e)
+                view?.onError(e.message.toString())
             }
         })
     }
@@ -90,7 +90,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
             }
 
             override fun onError(e: Exception) {
-                view?.onError(e)
+                view?.onError(e.message.toString())
             }
         })
     }
@@ -110,7 +110,7 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
             }
 
             override fun onError(e: Exception) {
-                view?.onError(e)
+                view?.onError(e.message.toString())
             }
         })
     }

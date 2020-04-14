@@ -13,12 +13,7 @@ interface HomeContract {
     interface View {
         fun onGetGenresSuccess(genres: List<Genres>)
         fun onGetMovies(type: MovieCategoryEnum, movies: List<Movie>)
-
-        //        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>)
-//        fun onGetMoviesUpcomingSuccess(movies: List<Movie>)
-//        fun onGetMoviesPopularSuccess(movies: List<Movie>)
-//        fun onGetMoviesByGenresIDSuccess(movies: List<Movie>)
-        fun onError(exception: Exception?)
+        fun onError(str: String?)
         fun onLoading(isLoad: Boolean)
     }
 

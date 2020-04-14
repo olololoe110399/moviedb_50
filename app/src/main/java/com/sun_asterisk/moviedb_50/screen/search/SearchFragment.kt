@@ -123,9 +123,10 @@ class SearchFragment : Fragment(), SearchContract.View {
         topRatedAdapter.updateData(movies)
     }
 
-    override fun onError(exception: Exception?) {
-        exception?.let {
-            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG).show()
+    override fun onError(str: String?) {
+        str?.let {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG)
+                .show()
         }
     }
 
@@ -142,7 +143,8 @@ class SearchFragment : Fragment(), SearchContract.View {
 
     private fun initToolBar() {
         view?.toolbar_base?.let {
-            (activity as? MainActivity)?.run { setSupportActionBar(it)
+            (activity as? MainActivity)?.run {
+                setSupportActionBar(it)
                 it.setNavigationOnClickListener {
                     activity?.run { supportFragmentManager.popBackStack() }
                 }

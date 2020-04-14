@@ -14,7 +14,7 @@ interface SearchContract {
         fun onGetGenresSuccess(genres: List<Genres>)
         fun getCategoriesSuccess(categories: List<Category>)
         fun onGetMoviesTopRatedSuccess(movies: List<Movie>)
-        fun onError(exception: Exception?)
+        fun onError(str: String?)
         fun onLoading(isLoad: Boolean)
     }
 

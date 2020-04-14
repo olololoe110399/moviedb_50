@@ -4,25 +4,24 @@ import com.sun_asterisk.moviedb_50.data.model.Category
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
-import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
-import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class SearchPresenter(private val movieRepository: MovieRepository) : SearchContract.Presenter {
     private var view: SearchContract.View? = null
-
+    private val compositeDisposable = CompositeDisposable()
     override fun getGenres() {
-        movieRepository.getGenres(object : OnDataLoadedCallback<GenresResponse> {
-
-            override fun onError(e: Exception) {
-                view?.onError(e)
-            }
-
-            override fun onSuccess(data: GenresResponse?) {
-                data ?: return
-                view?.onGetGenresSuccess(data.list)
-            }
-        })
+        val disposable: Disposable = movieRepository.getGenres()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ genreResponse ->
+                view?.onGetGenresSuccess(genreResponse.list)
+            },
+                { throwable -> view?.onError(throwable.message.toString()) })
+        compositeDisposable.add(disposable)
     }
 
     override fun getCategories() {
@@ -33,28 +32,21 @@ class SearchPresenter(private val movieRepository: MovieRepository) : SearchCont
             }
 
             override fun onError(e: Exception) {
-                view?.onError(e)
+                view?.onError(e.message.toString())
             }
         })
     }
 
     override fun getMovies(type: String, query: String, page: Int) {
-        movieRepository.getMovies(
-            type,
-            query,
-            page,
-            object : OnDataLoadedCallback<MoviesResponse> {
-
-                override fun onError(e: Exception) {
-                    view?.onError(e)
-                }
-
-                override fun onSuccess(data: MoviesResponse?) {
-                    data ?: return
-                    view?.onGetMoviesTopRatedSuccess(data.list as List<Movie>)
-                    view?.onLoading(true)
-                }
-            })
+        val disposable: Disposable = movieRepository.getMovies(type, query, page)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ data ->
+                view?.onGetMoviesTopRatedSuccess(data.list)
+                view?.onLoading(true)
+            },
+                { throwable -> view?.onError(throwable.message.toString()) })
+        compositeDisposable.add(disposable)
     }
 
     override fun onStart() {
