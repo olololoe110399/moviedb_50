@@ -123,23 +123,23 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         trailerAdapter.updateData(movieTrailers)
     }
 
-    override fun showFavoriteImage(type: String) {
-        if (type == Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS) {
+    override fun showFavoriteImage(type: FavoriteEnum) {
+        if (type == FavoriteEnum.ADD_FAVORITE_SUCCESS) {
             view?.favoriteImageView?.setImageResource(R.drawable.ic_favorite)
         } else {
             view?.favoriteImageView?.setImageResource(R.drawable.ic_favorite_border)
         }
     }
 
-    override fun notifyFavorite(type: String) {
+    override fun notifyFavorite(type: FavoriteEnum) {
         when (type) {
-            Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS ->
+            FavoriteEnum.ADD_FAVORITE_SUCCESS ->
                 activity?.showSnackBar(R.string.notification_add_favorite_success)
-            Constant.BASE_NOTIFY_ADD_FAVORITE_ERROR ->
+            FavoriteEnum.ADD_FAVORITE_ERROR ->
                 activity?.showSnackBar(R.string.notification_add_favorite_failed)
-            Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS ->
+            FavoriteEnum.DELETE_FAVORITE_SUCCESS ->
                 activity?.showSnackBar(R.string.notification_delete_success)
-            Constant.BASE_NOTIFY_DELETE_FAVORITE_ERROR ->
+            FavoriteEnum.DELETE_FAVORITE_ERROR ->
                 activity?.showSnackBar(R.string.notification_delete_failed)
         }
     }

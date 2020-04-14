@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseAdapter<T, V : BaseViewHolder<T>> : RecyclerView.Adapter<V>() {
 
-    private val items = ArrayList<T>()
+    var items = ArrayList<T>()
 
     override fun getItemCount(): Int = items.size
 
@@ -22,11 +22,6 @@ abstract class BaseAdapter<T, V : BaseViewHolder<T>> : RecyclerView.Adapter<V>()
         }
         notifyDataSetChanged()
     }
-
-    open fun getItems(): List<T> {
-        return items
-    }
-
     fun insertData(insertItems: List<T>) = with(items) {
         val firstPosition = size
         addAll(insertItems)

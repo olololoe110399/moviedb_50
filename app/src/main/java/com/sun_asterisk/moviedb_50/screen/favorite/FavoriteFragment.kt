@@ -17,6 +17,7 @@ import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.screen.details.MovieDetailsFragment
 import com.sun_asterisk.moviedb_50.screen.favorite.adapter.FavoriteAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.FavoriteEnum
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.showSnackBar
 import kotlinx.android.synthetic.main.fragment_favorite.view.*
@@ -71,8 +72,8 @@ class FavoriteFragment : Fragment(), FavoriteContract.View {
         favoriteAdapter?.removeData(position)
     }
 
-    override fun notifyDeleteFavorite(type: String) {
-        if (type == Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS) {
+    override fun notifyDeleteFavorite(type: FavoriteEnum) {
+        if (type == FavoriteEnum.DELETE_FAVORITE_SUCCESS) {
             activity?.showSnackBar(R.string.notification_delete_success)
         } else {
             activity?.showSnackBar(R.string.notification_delete_failed)

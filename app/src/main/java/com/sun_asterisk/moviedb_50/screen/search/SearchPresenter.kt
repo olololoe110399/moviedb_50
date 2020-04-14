@@ -1,6 +1,7 @@
 package com.sun_asterisk.moviedb_50.screen.search
 
 import com.sun_asterisk.moviedb_50.data.model.Category
+import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
@@ -50,7 +51,7 @@ class SearchPresenter(private val movieRepository: MovieRepository) : SearchCont
 
                 override fun onSuccess(data: MoviesResponse?) {
                     data ?: return
-                    view?.onGetMoviesTopRatedSuccess(data.list)
+                    view?.onGetMoviesTopRatedSuccess(data.list as List<Movie>)
                     view?.onLoading(true)
                 }
             })

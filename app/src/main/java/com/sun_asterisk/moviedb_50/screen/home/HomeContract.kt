@@ -4,6 +4,7 @@ import com.sun_asterisk.moviedb_50.data.model.Genres
 import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.screen.base.BasePresenter
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.MovieCategoryEnum
 
 interface HomeContract {
     /**
@@ -11,10 +12,12 @@ interface HomeContract {
      */
     interface View {
         fun onGetGenresSuccess(genres: List<Genres>)
-        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>)
-        fun onGetMoviesUpcomingSuccess(movies: List<Movie>)
-        fun onGetMoviesPopularSuccess(movies: List<Movie>)
-        fun onGetMoviesByGenresIDSuccess(movies: List<Movie>)
+        fun onGetMovies(type: MovieCategoryEnum, movies: List<Movie>)
+
+        //        fun onGetMoviesNowPlayingSuccess(movies: List<Movie>)
+//        fun onGetMoviesUpcomingSuccess(movies: List<Movie>)
+//        fun onGetMoviesPopularSuccess(movies: List<Movie>)
+//        fun onGetMoviesByGenresIDSuccess(movies: List<Movie>)
         fun onError(exception: Exception?)
         fun onLoading(isLoad: Boolean)
     }

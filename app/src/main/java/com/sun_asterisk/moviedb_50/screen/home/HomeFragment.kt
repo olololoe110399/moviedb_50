@@ -21,12 +21,13 @@ import com.sun_asterisk.moviedb_50.screen.details.MovieDetailsFragment
 import com.sun_asterisk.moviedb_50.screen.home.adapter.MovieAdapter
 import com.sun_asterisk.moviedb_50.screen.home.adapter.SliderViewPagerAdapter
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.MovieCategoryEnum
 import com.sun_asterisk.moviedb_50.utils.NetworkUtil
 import com.sun_asterisk.moviedb_50.utils.OnClickListener
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
-class HomeFragment : Fragment(),
+class HomeFragment(): Fragment(),
     HomeContract.View, OnClickListener<Movie> {
     private lateinit var presenter: HomeContract.Presenter
     private val upcomingAdapter: MovieAdapter by lazy { MovieAdapter() }
@@ -60,20 +61,14 @@ class HomeFragment : Fragment(),
         initTabGenres(genres)
     }
 
-    override fun onGetMoviesNowPlayingSuccess(movies: List<Movie>) {
-        movieSlideAdapter.updateData(movies)
-    }
-
-    override fun onGetMoviesUpcomingSuccess(movies: List<Movie>) {
-        upcomingAdapter.updateData(movies)
-    }
-
-    override fun onGetMoviesPopularSuccess(movies: List<Movie>) {
-        popularAdapter.updateData(movies)
-    }
-
-    override fun onGetMoviesByGenresIDSuccess(movies: List<Movie>) {
-        movieByIDAdapter.updateData(movies)
+    override fun onGetMovies(type: MovieCategoryEnum, movies: List<Movie>) {
+        when(type){
+            MovieCategoryEnum.BY_GENRES->   movieByIDAdapter.updateData(movies)
+            MovieCategoryEnum.POPULAR-> popularAdapter.updateData(movies)
+            MovieCategoryEnum.UPCOMING->   upcomingAdapter.updateData(movies)
+            MovieCategoryEnum.NOW_PLAYING->movieSlideAdapter.updateData(movies)
+            else -> Toast.makeText(activity,getString(R.string.message_null_result),Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onError(exception: Exception?) {

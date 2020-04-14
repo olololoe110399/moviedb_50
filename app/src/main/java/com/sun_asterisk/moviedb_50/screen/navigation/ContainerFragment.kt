@@ -51,6 +51,7 @@ class ContainerFragment : Fragment() {
 
                         override fun onQueryTextChange(newText: String): Boolean {
                             fragment.favoriteAdapter?.search(newText) {
+                                activity?.showSnackBar(R.string.nothing_found)
                             }
                             return true
                         }

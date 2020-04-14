@@ -1,5 +1,6 @@
 package com.sun_asterisk.moviedb_50.screen.listmovie
 
+import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
@@ -30,7 +31,7 @@ class ListMoviePresenter(private val movieRepository: MovieRepository) :
                 override fun onSuccess(data: MoviesResponse?) {
                     data ?: return
                     view?.onGetMovieResultPage(data.movieResultPage)
-                    view?.onGetMoviesSuccess(data.list)
+                    view?.onGetMoviesSuccess(data.list as List<Movie>)
                     view?.onLoading(true)
                 }
             })

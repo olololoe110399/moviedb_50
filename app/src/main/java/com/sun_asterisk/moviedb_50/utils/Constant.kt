@@ -35,8 +35,4 @@ object Constant {
     const val BASE_TITLE = "title"
     const val BASE_SEARCH = "/search/movie"
     const val BASE_QUERY = "&query="
-    const val BASE_NOTIFY_ADD_FAVORITE_SUCCESS = "add success"
-    const val BASE_NOTIFY_ADD_FAVORITE_ERROR = "add error"
-    const val BASE_NOTIFY_DELETE_FAVORITE_SUCCESS = "delete success"
-    const val BASE_NOTIFY_DELETE_FAVORITE_ERROR = "delete error"
 }

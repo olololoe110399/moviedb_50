@@ -2,6 +2,7 @@ package com.sun_asterisk.moviedb_50.screen.favorite
 
 import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.screen.base.BasePresenter
+import com.sun_asterisk.moviedb_50.utils.FavoriteEnum
 
 interface FavoriteContract {
     /**
@@ -10,7 +11,7 @@ interface FavoriteContract {
     interface View {
         fun onGetFavoritesSuccess(favorites: MutableList<Favorite>)
         fun updateFavoritesAfterRemovingItem(position: Int)
-        fun notifyDeleteFavorite(type: String)
+        fun notifyDeleteFavorite(type: FavoriteEnum)
         fun onError(exception: Exception?)
         fun onLoading(isLoad: Boolean)
     }
