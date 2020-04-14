@@ -1,6 +1,6 @@
-# MovieDB 50
-+ Trainee: [DN_OE32_Android] Nguyen Ngoc Duy
-+ Trainer: TuanLVT
-+ Start date: 03/02/2020
-+ End date: 03/17/2020
-+ Redmine:https://edu-redmine.sun-asterisk.vn/projects/moviedb_50
+# MovieDB 
++ MVP + Kotlin
++ Screenshots APP
+
+
++ <img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116864.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116869.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116873.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116876.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116879.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116898.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116906.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116925.png" width="200"><img src="https://github.com/olololoe110399/moviedb_50/blob/Task_14/ScreenShorts/Screenshot_1590116939.png" width="200">

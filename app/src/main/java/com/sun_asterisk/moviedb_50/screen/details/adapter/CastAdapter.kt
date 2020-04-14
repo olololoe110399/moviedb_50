@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Cast
 import com.sun_asterisk.moviedb_50.screen.base.BaseAdapter
@@ -13,10 +15,12 @@ import com.sun_asterisk.moviedb_50.utils.GetImageAsyncTask
 import com.sun_asterisk.moviedb_50.utils.OnFetchImageListener
 import kotlinx.android.synthetic.main.item_cast.view.*
 
-class CastAdapter : BaseAdapter<Cast, CastAdapter.ViewHolder>() {
+class CastAdapter : BaseAdapter<Cast, CastAdapter.ViewHolder>(), Filterable {
 
     var onItemClick: (Cast, Int) -> Unit = { _, _ -> }
+    private var onNothingFound: (() -> Unit)? = null
 
+    private val arrayList = ArrayList(items)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
             LayoutInflater.from(parent.context)
@@ -47,5 +51,39 @@ class CastAdapter : BaseAdapter<Cast, CastAdapter.ViewHolder>() {
                     }
                 }).execute(Constant.BASE_URL_IMAGE + cast?.castProfilePath)
         }
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            private val filterResults = FilterResults()
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                items.clear()
+                if (constraint == null || constraint.isEmpty()) {
+                    items.addAll(arrayList)
+                } else {
+                    val searchResults =
+                        arrayList.filter {
+                            it.castName.toLowerCase()
+                                .contains(constraint.toString().toLowerCase().trim())
+                        }
+                    items.addAll(searchResults)
+
+                }
+                return filterResults.also {
+                    it.values = items
+                }
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                if (items.isNullOrEmpty())
+                    onNothingFound?.invoke()
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    fun search(s: String?, onNothingFound: (() -> Unit)?) {
+        this.onNothingFound = onNothingFound
+        filter.filter(s)
     }
 }

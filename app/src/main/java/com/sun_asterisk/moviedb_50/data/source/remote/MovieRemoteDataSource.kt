@@ -1,10 +1,8 @@
 package com.sun_asterisk.moviedb_50.data.source.remote
 
+import android.util.Log
 import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GenresResponseHandler
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.GetDataFromUrlAsync
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.MovieDetailsResponseHandler
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.MoviesResponseHandler
+import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.*
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
@@ -18,7 +16,7 @@ class MovieRemoteDataSource : MovieDataSource.Remote {
                     Constant.BASE_GENRES_LIST +
                     Constant.BASE_API_KEY +
                     Constant.BASE_LANGUAGE
-        GetDataFromUrlAsync(GenresResponseHandler(), listener).execute(url)
+        GetDataFromUrlAsync(ResponseHandler.GenresResponseHandler(), listener).execute(url)
     }
 
     override fun getMovies(
@@ -46,7 +44,7 @@ class MovieRemoteDataSource : MovieDataSource.Remote {
                     Constant.BASE_SEARCH -> Constant.BASE_QUERY + query
                     else -> ""
                 }
-        GetDataFromUrlAsync(MoviesResponseHandler(), listener).execute(url)
+        GetDataFromUrlAsync(ResponseHandler.MoviesResponseHandler(), listener).execute(url)
     }
 
     override fun getMovieDetails(
@@ -61,7 +59,7 @@ class MovieRemoteDataSource : MovieDataSource.Remote {
                 Constant.BASE_APPEND +
                 Constant.BASE_CREDITS +
                 Constant.BASE_VIDEO
-        GetDataFromUrlAsync(MovieDetailsResponseHandler(), listener).execute(url)
+        GetDataFromUrlAsync(ResponseHandler.MovieDetailsResponseHandler(), listener).execute(url)
     }
 
     companion object {

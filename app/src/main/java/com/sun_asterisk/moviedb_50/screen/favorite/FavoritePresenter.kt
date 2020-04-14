@@ -4,6 +4,7 @@ import com.sun_asterisk.moviedb_50.data.model.Favorite
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.FavoriteEnum
 
 class FavoritePresenter(private val movieRepository: MovieRepository) : FavoriteContract.Presenter {
     private var view: FavoriteContract.View? = null
@@ -28,10 +29,10 @@ class FavoritePresenter(private val movieRepository: MovieRepository) : Favorite
             override fun onSuccess(data: Boolean?) {
                 data ?: return
                 if (data) {
-                    view?.notifyDeleteFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS)
+                    view?.notifyDeleteFavorite(FavoriteEnum.DELETE_FAVORITE_SUCCESS)
                     view?.updateFavoritesAfterRemovingItem(position)
                 } else {
-                    view?.notifyDeleteFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_ERROR)
+                    view?.notifyDeleteFavorite(FavoriteEnum.DELETE_FAVORITE_ERROR)
                 }
             }
 

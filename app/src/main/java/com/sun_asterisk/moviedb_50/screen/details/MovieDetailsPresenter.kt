@@ -5,6 +5,7 @@ import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.FavoriteEnum
 
 class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
     MovieDetailsContract.Presenter {
@@ -49,8 +50,8 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
             override fun onSuccess(data: Boolean?) {
                 data ?: return
                 view?.showFavoriteImage(
-                    if (data) Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS
-                    else Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS
+                    if (data) FavoriteEnum.ADD_FAVORITE_SUCCESS
+                    else FavoriteEnum.DELETE_FAVORITE_SUCCESS
                 )
             }
 
@@ -80,10 +81,10 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
                 data ?: return
                 view?.run {
                     if (data) {
-                        showFavoriteImage(Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS)
-                        notifyFavorite(Constant.BASE_NOTIFY_ADD_FAVORITE_SUCCESS)
+                        showFavoriteImage(FavoriteEnum.ADD_FAVORITE_SUCCESS)
+                        notifyFavorite(FavoriteEnum.ADD_FAVORITE_SUCCESS)
                     } else {
-                        notifyFavorite(Constant.BASE_NOTIFY_ADD_FAVORITE_ERROR)
+                        notifyFavorite(FavoriteEnum.ADD_FAVORITE_ERROR)
                     }
                 }
             }
@@ -100,10 +101,10 @@ class MovieDetailsPresenter(private val movieRepository: MovieRepository) :
                 data ?: return
                 view?.run {
                     if (data) {
-                        showFavoriteImage(Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS)
-                        notifyFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_SUCCESS)
+                        showFavoriteImage(FavoriteEnum.DELETE_FAVORITE_SUCCESS)
+                        notifyFavorite(FavoriteEnum.DELETE_FAVORITE_SUCCESS)
                     } else {
-                        notifyFavorite(Constant.BASE_NOTIFY_DELETE_FAVORITE_ERROR)
+                        notifyFavorite(FavoriteEnum.DELETE_FAVORITE_ERROR)
                     }
                 }
             }

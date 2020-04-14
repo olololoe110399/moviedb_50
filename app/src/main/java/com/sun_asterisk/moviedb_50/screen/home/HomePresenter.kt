@@ -1,10 +1,12 @@
 package com.sun_asterisk.moviedb_50.screen.home
 
+import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
+import com.sun_asterisk.moviedb_50.utils.MovieCategoryEnum
 
 class HomePresenter(private val movieRepository: MovieRepository) : HomeContract.Presenter {
     private var view: HomeContract.View? = null
@@ -53,13 +55,13 @@ class HomePresenter(private val movieRepository: MovieRepository) : HomeContract
                     data ?: return
                     when (type) {
                         Constant.BASE_NOW_PLAYING ->
-                            view?.onGetMoviesNowPlayingSuccess(data.list)
+                            view?.onGetMovies(MovieCategoryEnum.NOW_PLAYING,data.list as List<Movie>)
                         Constant.BASE_UPCOMING ->
-                            view?.onGetMoviesUpcomingSuccess(data.list)
+                            view?.onGetMovies(MovieCategoryEnum.UPCOMING,data.list as List<Movie>)
                         Constant.BASE_POPULAR ->
-                            view?.onGetMoviesPopularSuccess(data.list)
+                            view?.onGetMovies(MovieCategoryEnum.POPULAR,data.list as List<Movie> )
                         Constant.BASE_GENRES_ID ->
-                            view?.onGetMoviesByGenresIDSuccess(data.list)
+                            view?.onGetMovies(MovieCategoryEnum.BY_GENRES,data.list as List<Movie>)
                     }
                     view?.onLoading(true)
                 }
