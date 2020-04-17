@@ -17,7 +17,7 @@ class MovieDetailsContract {
         fun showFavoriteImage(type: FavoriteEnum)
         fun notifyFavorite(type: FavoriteEnum)
         fun onLoading(isLoad: Boolean)
-        fun onError(exception: Exception?)
+        fun onError(str: String?)
     }
 
     /**

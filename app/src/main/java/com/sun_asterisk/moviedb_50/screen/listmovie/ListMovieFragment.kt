@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.sun_asterisk.moviedb_50.R
 import com.sun_asterisk.moviedb_50.data.model.Movie
-import com.sun_asterisk.moviedb_50.data.model.MovieResultPage
 import com.sun_asterisk.moviedb_50.data.repository.MovieRepository
 import com.sun_asterisk.moviedb_50.data.source.local.MovieLocalDataSource
 import com.sun_asterisk.moviedb_50.data.source.local.dao.FavoritesDaoImpl
@@ -67,18 +66,19 @@ class ListMovieFragment : Fragment(), ListMovieContract.View {
         movieListAdapter.insertData(movies)
     }
 
-    override fun onGetMovieResultPage(movieResultPage: MovieResultPage) {
-        totalPage = movieResultPage.movieTotalPage
+    override fun onGetMovieResultPage(movieTotalResult: Int, movieTotalPage: Int) {
+        totalPage = movieTotalPage
         view?.run {
             resultTextView.text =
-                getString(R.string.results_found, movieResultPage.movieTotalResult)
+                getString(R.string.results_found, movieTotalResult)
 
         }
     }
 
-    override fun onError(exception: Exception?) {
-        exception?.let {
-            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG).show()
+    override fun onError(str: String?) {
+        str?.let {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG)
+                .show()
         }
     }
 

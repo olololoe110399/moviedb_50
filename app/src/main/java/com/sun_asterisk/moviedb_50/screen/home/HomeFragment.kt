@@ -27,7 +27,7 @@ import com.sun_asterisk.moviedb_50.utils.OnClickListener
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import java.util.*
 
-class HomeFragment(): Fragment(),
+class HomeFragment() : Fragment(),
     HomeContract.View, OnClickListener<Movie> {
     private lateinit var presenter: HomeContract.Presenter
     private val upcomingAdapter: MovieAdapter by lazy { MovieAdapter() }
@@ -62,18 +62,22 @@ class HomeFragment(): Fragment(),
     }
 
     override fun onGetMovies(type: MovieCategoryEnum, movies: List<Movie>) {
-        when(type){
-            MovieCategoryEnum.BY_GENRES->   movieByIDAdapter.updateData(movies)
-            MovieCategoryEnum.POPULAR-> popularAdapter.updateData(movies)
-            MovieCategoryEnum.UPCOMING->   upcomingAdapter.updateData(movies)
-            MovieCategoryEnum.NOW_PLAYING->movieSlideAdapter.updateData(movies)
-            else -> Toast.makeText(activity,getString(R.string.message_null_result),Toast.LENGTH_SHORT).show()
+        when (type) {
+            MovieCategoryEnum.BY_GENRES -> movieByIDAdapter.updateData(movies)
+            MovieCategoryEnum.POPULAR -> popularAdapter.updateData(movies)
+            MovieCategoryEnum.UPCOMING -> upcomingAdapter.updateData(movies)
+            MovieCategoryEnum.NOW_PLAYING -> movieSlideAdapter.updateData(movies)
+            else -> Toast.makeText(
+                activity,
+                getString(R.string.message_null_result),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
-    override fun onError(exception: Exception?) {
-        exception?.let {
-            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+    override fun onError(str: String?) {
+        str?.let {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG)
                 .show()
         }
     }
@@ -128,8 +132,8 @@ class HomeFragment(): Fragment(),
                         }
 
                         override fun onTabSelected(tab: TabLayout.Tab?) {
-                            activity?.let {
-                                if (NetworkUtil.isConnectedToNetwork(it)) {
+                            activity?.let { activity ->
+                                if (NetworkUtil.isConnectedToNetwork(activity)) {
                                     tab?.let { genresSelected = genres[it.position].genresID }
                                     presenter.getMovie(
                                         Constant.BASE_GENRES_ID,
@@ -138,7 +142,7 @@ class HomeFragment(): Fragment(),
                                 } else {
                                     onLoading(true)
                                     Toast.makeText(
-                                        it,
+                                        activity,
                                         getString(R.string.check_internet_fail),
                                         Toast.LENGTH_SHORT
                                     ).show()
@@ -209,8 +213,10 @@ class HomeFragment(): Fragment(),
 
     private fun initRefresh() {
         view?.homeSwipeRefresh?.setOnRefreshListener {
+
             activity?.let {
                 if (NetworkUtil.isConnectedToNetwork(it)) {
+
                     presenter.onStart()
                     presenter.getMovie(
                         Constant.BASE_GENRES_ID,

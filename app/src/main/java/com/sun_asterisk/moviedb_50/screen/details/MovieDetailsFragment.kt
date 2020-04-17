@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import kotlinx.android.synthetic.main.toolbar_base.*
 import java.io.ByteArrayOutputStream
 
-
 class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
     private lateinit var presenter: MovieDetailsContract.Presenter
     private lateinit var movieFavorite: Movie
@@ -79,8 +78,6 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
             getImageAsync(movie.movieBackdropPath, backdropImageView)
             getImageAsync(movie.moviePosterPath, posterImageView)
             strMoviePoster = movie.moviePosterPath
-            backdropImageView.animation =
-                AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
             movieFavorite = movie
         }
     }
@@ -155,9 +152,9 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         }
     }
 
-    override fun onError(exception: Exception?) {
-        exception?.let {
-            Toast.makeText(activity, it.message.toString(), Toast.LENGTH_LONG)
+    override fun onError(str: String?) {
+        str?.let {
+            Toast.makeText(activity, it, Toast.LENGTH_LONG)
                 .show()
         }
     }
@@ -187,7 +184,12 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                     if (bitmap !== null) {
                         imageView.setImageBitmap(bitmap)
                         if (strUrl == strMoviePoster) {
+                            view?.posterImageView?.animation =
+                                AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
                             byteArrayPoster = convertBitmapToByteArray(bitmap)
+                        } else {
+                            view?.backdropImageView?.animation =
+                                AnimationUtils.loadAnimation(activity, R.anim.scale_animation)
                         }
                     } else {
                         byteArrayPoster = null

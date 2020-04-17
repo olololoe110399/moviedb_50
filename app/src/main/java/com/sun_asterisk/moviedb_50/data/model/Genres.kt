@@ -1,15 +1,13 @@
 package com.sun_asterisk.moviedb_50.data.model
 
-import org.json.JSONObject
+import com.google.gson.annotations.SerializedName
 
 data class Genres(
+    @SerializedName(GenresEntry.GENRES_ID)
     val genresID: Int,
+    @SerializedName(GenresEntry.GENRES_NAME)
     val genresName: String
 ) {
-    constructor(genresJson: JSONObject) : this(
-        genresID = genresJson.optInt(GenresEntry.GENRES_ID),
-        genresName = genresJson.optString(GenresEntry.GENRES_NAME)
-    )
 
     object GenresEntry {
         const val GENRES = "genres"

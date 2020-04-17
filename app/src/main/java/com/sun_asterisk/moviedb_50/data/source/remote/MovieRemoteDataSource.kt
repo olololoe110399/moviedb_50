@@ -1,22 +1,19 @@
 package com.sun_asterisk.moviedb_50.data.source.remote
 
-import android.util.Log
+import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
-import com.sun_asterisk.moviedb_50.data.source.remote.fetchjson.*
+import com.sun_asterisk.moviedb_50.data.source.remote.api.ApiRequest
+import com.sun_asterisk.moviedb_50.data.source.remote.api.NetworkService
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
-import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
 import com.sun_asterisk.moviedb_50.utils.Constant
+import io.reactivex.Observable
 
-class MovieRemoteDataSource : MovieDataSource.Remote {
+class MovieRemoteDataSource private constructor(private val apiRequest: ApiRequest) :
+    MovieDataSource.Remote {
 
-    override fun getGenres(listener: OnDataLoadedCallback<GenresResponse>) {
-        val url =
-            Constant.BASE_URL +
-                    Constant.BASE_GENRES_LIST +
-                    Constant.BASE_API_KEY +
-                    Constant.BASE_LANGUAGE
-        GetDataFromUrlAsync(ResponseHandler.GenresResponseHandler(), listener).execute(url)
+    override fun getGenres(): Observable<GenresResponse> {
+        return apiRequest.getGenres()
     }
 
     override fun getMovies(
@@ -25,46 +22,36 @@ class MovieRemoteDataSource : MovieDataSource.Remote {
         page: Int,
         listener: OnDataLoadedCallback<MoviesResponse>
     ) {
+    }
 
-        val url = Constant.BASE_URL +
-                when (type) {
-                    Constant.BASE_GENRES_ID -> Constant.BASE_DISCOVER_MOVIE
-                    Constant.BASE_CAST_ID -> Constant.BASE_DISCOVER_MOVIE
-                    Constant.BASE_PRODUCE_ID -> Constant.BASE_DISCOVER_MOVIE
-                    else -> type
-                } +
-                Constant.BASE_API_KEY +
-                Constant.BASE_LANGUAGE +
-                Constant.BASE_PAGE +
-                page +
-                when (type) {
-                    Constant.BASE_GENRES_ID -> type + query
-                    Constant.BASE_CAST_ID -> type + query
-                    Constant.BASE_PRODUCE_ID -> type + query
-                    Constant.BASE_SEARCH -> Constant.BASE_QUERY + query
-                    else -> ""
-                }
-        GetDataFromUrlAsync(ResponseHandler.MoviesResponseHandler(), listener).execute(url)
+    override fun getMovies(type: String, query: String, page: Int): Observable<MoviesResponse> {
+        return when (type) {
+            Constant.BASE_GENRES_ID -> apiRequest.getMoviesByGenresID(
+                query,
+                page
+            )
+            Constant.BASE_CAST_ID -> apiRequest.getMoviesCastID(
+                query,
+                page
+            )
+            Constant.BASE_PRODUCE_ID -> apiRequest.getMoviesByProduceID(
+                query,
+                page
+            )
+            Constant.BASE_SEARCH -> apiRequest.getMoviesByQuery(query, page)
+            else -> apiRequest.getMoviesByCategory(type, page)
+        }
     }
 
     override fun getMovieDetails(
-        movieID: Int,
-        listener: OnDataLoadedCallback<MovieDetailsResponse>
-    ) {
-        val url = Constant.BASE_URL +
-                Constant.BASE_MOVIE +
-                movieID +
-                Constant.BASE_API_KEY +
-                Constant.BASE_LANGUAGE +
-                Constant.BASE_APPEND +
-                Constant.BASE_CREDITS +
-                Constant.BASE_VIDEO
-        GetDataFromUrlAsync(ResponseHandler.MovieDetailsResponseHandler(), listener).execute(url)
+        movieID: Int
+    ): Observable<Movie> {
+        return apiRequest.getMovieDetails(movieID)
     }
 
     companion object {
         private var instance: MovieRemoteDataSource? = null
         fun getInstance() =
-            instance ?: MovieRemoteDataSource().also { instance = it }
+            instance ?: MovieRemoteDataSource(NetworkService.getInstance()).also { instance = it }
     }
 }

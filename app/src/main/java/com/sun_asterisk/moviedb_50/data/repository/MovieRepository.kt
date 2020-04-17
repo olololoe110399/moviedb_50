@@ -2,12 +2,13 @@ package com.sun_asterisk.moviedb_50.data.repository
 
 import com.sun_asterisk.moviedb_50.data.model.Category
 import com.sun_asterisk.moviedb_50.data.model.Favorite
+import com.sun_asterisk.moviedb_50.data.model.Movie
 import com.sun_asterisk.moviedb_50.data.source.MovieDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.MovieRemoteDataSource
 import com.sun_asterisk.moviedb_50.data.source.remote.OnDataLoadedCallback
 import com.sun_asterisk.moviedb_50.data.source.remote.response.GenresResponse
-import com.sun_asterisk.moviedb_50.data.source.remote.response.MovieDetailsResponse
 import com.sun_asterisk.moviedb_50.data.source.remote.response.MoviesResponse
+import io.reactivex.Observable
 
 class MovieRepository private constructor(
     private val remoteMovie: MovieDataSource.Remote,
@@ -17,24 +18,22 @@ class MovieRepository private constructor(
         localMovie.getCategories(listener)
     }
 
-    fun getGenres(listener: OnDataLoadedCallback<GenresResponse>) {
-        remoteMovie.getGenres(listener)
+    fun getGenres(): Observable<GenresResponse> {
+        return remoteMovie.getGenres()
     }
 
     fun getMovies(
         type: String,
         query: String,
-        page: Int,
-        listener: OnDataLoadedCallback<MoviesResponse>
-    ) {
-        remoteMovie.getMovies(type, query, page, listener)
+        page: Int
+    ): Observable<MoviesResponse> {
+        return remoteMovie.getMovies(type, query, page)
     }
 
     fun getMovieDetails(
-        movieID: Int,
-        listener: OnDataLoadedCallback<MovieDetailsResponse>?
-    ) {
-        listener?.let { remoteMovie.getMovieDetails(movieID, it) }
+        movieID: Int
+    ): Observable<Movie> {
+        return remoteMovie.getMovieDetails(movieID)
     }
 
     fun getFavorites(listener: OnDataLoadedCallback<MutableList<Favorite>>) {
